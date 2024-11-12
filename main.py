@@ -31,10 +31,9 @@ class MainCalc(QDialog):
 
         self.routes_list = QListWidget(self)
         self.routes_list.setMaximumWidth(100)
-        self.routes_list.addItem(QListWidgetItem("Pierwsza trasa"))
+        self.routes_list.currentItemChanged.connect(self.item_load)
 
-        self.routes_list.addItem(QListWidgetItem("Druga trasa"))
-        self.routes_list.currentItemChanged.connect(self.list_remove)
+        self.list_load()
 
         save_button = QPushButton()
         save_button.setMaximumWidth(50)
@@ -58,16 +57,49 @@ class MainCalc(QDialog):
 
         return wrapper_layout
 
+    def list_load(self) -> None:
+        self.saved_data = []
+        with open("saved.txt", "r") as data_file:
+            for line in data_file:
+                self.saved_data.append(line.split(";"))
+
+        for route in self.saved_data:
+            self.routes_list.addItem(route[0])
+
+    def item_load(self, item) -> None:
+        for route in self.saved_data:
+            if route[0] == item.text():
+                self.d1_line.setText(route[1])
+                self.d2_line.setText(route[2])
+                self.d3_line.setText(route[3])
+                self.d4_line.setText(route[4])
+
+                self.h1_line.setText(route[5])
+                self.h2_line.setText(route[6])
+                self.h3_line.setText(route[7])
+                self.h4_line.setText(route[8])
+
+
+
     @Slot()
-    def list_remove(self, curr_item) -> None:
-        print(curr_item.text())
+    def list_remove(self) -> None:
+        selected_item = self.routes_list.takeItem(self.routes_list.currentRow())
+        saved_data = ""
+
+        with open("saved.txt", 'r') as data_file:
+            for line in data_file:
+                if selected_item.text() not in line:
+                    saved_data = saved_data + line
+
+        with open("saved.txt", "w") as data_file:
+            print(saved_data, file=data_file)
 
     @Slot()
     def list_save(self) -> None:
-        name = "Insert name here"
+        name = str(input("Podaj nazwę"))
         self.routes_list.addItem(name)
 
-        with open("saved.txt", 'w') as saved_data:
+        with open("saved.txt", 'a') as data_file:
             print(name,
                   self.d1_line.text(),
                   self.d2_line.text(),
@@ -76,7 +108,7 @@ class MainCalc(QDialog):
                   self.h1_line.text(),
                   self.h2_line.text(),
                   self.h3_line.text(),
-                  self.h4_line.text(), sep=";", file=saved_data)
+                  self.h4_line.text(), sep=";", file=data_file)
 
     def input_init(self) -> QHBoxLayout:
         title_layout = QVBoxLayout(self)
