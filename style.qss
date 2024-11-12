@@ -1,0 +1,26 @@
+MainCalc {
+    background: #333333;
+}
+
+QLabel {
+    color: white;
+}
+
+QRadioButton {
+    color: white;
+}
+
+QListWidget {
+    background: #555555;
+    border-radius: 10px;
+    color: white;
+}
+
+QLineEdit {
+    background: #555555;
+    border-radius: 9px;
+    color: white;
+}
+
+
+
