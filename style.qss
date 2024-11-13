@@ -14,12 +14,26 @@ QListWidget {
     background: #555555;
     border-radius: 10px;
     color: white;
+    text-align: center;
 }
 
 QLineEdit {
     background: #555555;
     border-radius: 9px;
     color: white;
+}
+
+QPushButton {
+    background-color: #2296F3;
+    border-radius: 5px;
+    border: solid;
+    padding: 5px;
+}
+
+QPushButton#calc_button {
+    padding-left: 50px;
+    padding-right: 50px;
+    font-size: 18px;
 }
 
 
