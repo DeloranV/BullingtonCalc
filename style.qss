@@ -23,7 +23,14 @@ QLineEdit {
     color: white;
 }
 
-QPushButton {
+QPushButton#save_button {
+    background-color: #2296F3;
+    border-radius: 5px;
+    border: solid;
+    padding: 5px;
+}
+
+QPushButton#remove_button {
     background-color: #2296F3;
     border-radius: 5px;
     border: solid;
@@ -31,9 +38,22 @@ QPushButton {
 }
 
 QPushButton#calc_button {
+    background-color: #2296F3;
+    border-radius: 5px;
+    border: solid;
     padding-left: 50px;
     padding-right: 50px;
     font-size: 18px;
+}
+
+QPushButton#upload_button {
+    background-color: #555555;
+    border: solid;
+    border-color: #2296F3;
+    color: gray;
+    border-width: 2px;
+    border-radius: 5px;
+    padding: 5px;
 }
 
 
