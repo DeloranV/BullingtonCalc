@@ -4,6 +4,7 @@ from PySide6.QtWidgets import QApplication, QDialog, QLabel, QPushButton, QRadio
 from math import sqrt, log10, e
 #(TODO) WHEN AN ELEMENT HAS MORE THAN ONE BEHAVIOUR - CREATE A SEPERATE CLASS FOR IT FOR EXAMPLE RADIO BUTTONS WITH radio_checked, change_radio ETC...
 #(TODO) HOVER PIAST URL HINT
+#(TODO) TERRAIN PROFILE DISPLAY - GRAPH
 class DragDropBttn(QPushButton):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -18,7 +19,6 @@ class DragDropBttn(QPushButton):
     def dropEvent(self, event):
         url = event.mimeData().urls()
         local_url = url[0].toLocalFile()
-        print(local_url)
 
         with open(local_url, 'r') as csv_file:
             self.csv_file = csv_file.read()
@@ -123,7 +123,15 @@ class MainCalc(QDialog):
 
             self.uploaded_distance.sort(reverse=True, key=self.sort_key)
 
-            print(self.uploaded_distance)
+            self.d1_line.setText(str(self.uploaded_distance[0][0]))
+            self.d2_line.setText(str(self.uploaded_distance[1][0]))
+            self.d3_line.setText(str(self.uploaded_distance[2][0]))
+            self.d4_line.setText(str(self.uploaded_distance[3][0]))
+
+            self.h1_line.setText(str(self.uploaded_distance[0][1]))
+            self.h2_line.setText(str(self.uploaded_distance[1][1]))
+            self.h3_line.setText(str(self.uploaded_distance[2][1]))
+            self.h4_line.setText(str(self.uploaded_distance[3][1]))
 
     def sort_key(self, e):  #for sorting list by second col
         return e[1]
@@ -609,59 +617,101 @@ class MainCalc(QDialog):
             s_tr = round((self.rx_h_line.return_float() - self.tx_h_line.return_float()) / self.betweeen.return_float(), 3)
             self.str_line.setText(str(s_tr))
 
-            rx_d1 = self.betweeen.return_float() - self.d1_line.return_float()
-            rx_d2 = self.betweeen.return_float() - self.d2_line.return_float()
-            rx_d3 = self.betweeen.return_float() - self.d3_line.return_float()
-            rx_d4 = self.betweeen.return_float() - self.d4_line.return_float()
+            if self.stim >= s_tr:
 
-            s_rim1 = ((self.h1_line.return_float() +
-                       500 * self.EFFECTIVE_EARTH_CURVATURE * rx_d1 *
-                       (self.betweeen.return_float() - rx_d1) - self.rx_h_line.return_float())
-                      / (self.betweeen.return_float() - rx_d1))
+                rx_d1 = self.betweeen.return_float() - self.d1_line.return_float()
+                rx_d2 = self.betweeen.return_float() - self.d2_line.return_float()
+                rx_d3 = self.betweeen.return_float() - self.d3_line.return_float()
+                rx_d4 = self.betweeen.return_float() - self.d4_line.return_float()
 
-            s_rim2 = ((self.h2_line.return_float() +
-                       500 * self.EFFECTIVE_EARTH_CURVATURE * rx_d2 *
-                       (self.betweeen.return_float() - rx_d2) - self.rx_h_line.return_float())
-                      / (self.betweeen.return_float() - rx_d2))
+                s_rim1 = ((self.h1_line.return_float() +
+                           500 * self.EFFECTIVE_EARTH_CURVATURE * rx_d1 *
+                           (self.betweeen.return_float() - rx_d1) - self.rx_h_line.return_float())
+                          / (self.betweeen.return_float() - rx_d1))
 
-            s_rim3 = ((self.h3_line.return_float() +
-                       500 * self.EFFECTIVE_EARTH_CURVATURE * rx_d3 *
-                       (self.betweeen.return_float() - rx_d3) - self.rx_h_line.return_float())
-                      / (self.betweeen.return_float() - rx_d3))
+                s_rim2 = ((self.h2_line.return_float() +
+                           500 * self.EFFECTIVE_EARTH_CURVATURE * rx_d2 *
+                           (self.betweeen.return_float() - rx_d2) - self.rx_h_line.return_float())
+                          / (self.betweeen.return_float() - rx_d2))
 
-            s_rim4 = ((self.h4_line.return_float() +
-                       500 * self.EFFECTIVE_EARTH_CURVATURE * rx_d4 *
-                       (self.betweeen.return_float() - rx_d4) - self.rx_h_line.return_float())
-                      / (self.betweeen.return_float() - rx_d4))
+                s_rim3 = ((self.h3_line.return_float() +
+                           500 * self.EFFECTIVE_EARTH_CURVATURE * rx_d3 *
+                           (self.betweeen.return_float() - rx_d3) - self.rx_h_line.return_float())
+                          / (self.betweeen.return_float() - rx_d3))
 
-            self.srim = round(max(s_rim1, s_rim2, s_rim3, s_rim4), 3)
+                s_rim4 = ((self.h4_line.return_float() +
+                           500 * self.EFFECTIVE_EARTH_CURVATURE * rx_d4 *
+                           (self.betweeen.return_float() - rx_d4) - self.rx_h_line.return_float())
+                          / (self.betweeen.return_float() - rx_d4))
 
-            self.srim_line.setText(str(self.srim))
+                self.srim = round(max(s_rim1, s_rim2, s_rim3, s_rim4), 3)
 
-            self.db = ((self.rx_h_line.return_float() - self.tx_h_line.return_float() + self.srim * self.betweeen.return_float())
-                  / (self.stim+self.srim))
+                self.srim_line.setText(str(self.srim))
 
-            self.db_line.setText(str(round(self.db,3)))
+                self.db = ((self.rx_h_line.return_float() - self.tx_h_line.return_float() + self.srim * self.betweeen.return_float())
+                      / (self.stim+self.srim))
 
-            self.vb = (self.tx_h_line.return_float() + self.stim * self.db -
-                       (self.tx_h_line.return_float() * (self.betweeen.return_float() - self.db) + self.rx_h_line.return_float() * self.db)
-                       / self.betweeen.return_float()) * sqrt((0.002 * self.betweeen.return_float()) / (self.wavelength * self.db * (self.betweeen.return_float() - self.db)))
+                self.db_line.setText(str(round(self.db,3)))
 
-            self.vb_line.setText(str(round(self.vb,3)))
+                self.vb = (self.tx_h_line.return_float() + self.stim * self.db -
+                           (self.tx_h_line.return_float() * (self.betweeen.return_float() - self.db) + self.rx_h_line.return_float() * self.db)
+                           / self.betweeen.return_float()) * sqrt((0.002 * self.betweeen.return_float()) / (self.wavelength * self.db * (self.betweeen.return_float() - self.db)))
 
-            self.luc = 6.9 + 20*log10(sqrt(pow(self.vb-0.1,2)+1)+self.vb-0.1)
+                self.vb_line.setText(str(round(self.vb,3)))
 
-            self.luc_line.setText(str(round(self.luc,3)))
+                self.luc = 6.9 + 20*log10(sqrt(pow(self.vb-0.1,2)+1)+self.vb-0.1)
 
-            self.lb = self.luc+(1-pow(e,-self.luc/6))*(10 + 0.02 * self.betweeen.return_float())
+                self.luc_line.setText(str(round(self.luc,3)))
 
-            self.loss_line.setText(str(round(self.lb, 3)))
+                self.lb = self.luc+(1-pow(e,-self.luc/6))*(10 + 0.02 * self.betweeen.return_float())
+
+                self.loss_line.setText(str(round(self.lb, 3)))
+
+            else:
+
+                self.srim_line.setText("LOS")
+                self.db_line.setText("LOS")
+
+                v_1 = (self.h1_line.return_float() + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d1_line.return_float()
+                            * (self.betweeen.return_float()-self.d1_line.return_float())
+                            -(self.tx_h_line.return_float() * (self.betweeen.return_float() - self.d1_line.return_float())
+                              + self.rx_h_line.return_float() * self.d1_line.return_float())
+                           / self.betweeen.return_float()) * sqrt((0.002 * self.betweeen.return_float())
+                            / (self.wavelength * self.d1_line.return_float() * (self.betweeen.return_float() - self.d1_line.return_float())))
+
+                v_2 = (self.h2_line.return_float() + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d2_line.return_float()
+                       * (self.betweeen.return_float() - self.d2_line.return_float())
+                       - (self.tx_h_line.return_float() * (self.betweeen.return_float() - self.d2_line.return_float())
+                          + self.rx_h_line.return_float() * self.d2_line.return_float())
+                       / self.betweeen.return_float()) * sqrt((0.002 * self.betweeen.return_float())
+                                                              / (self.wavelength * self.d2_line.return_float() * (
+                            self.betweeen.return_float() - self.d2_line.return_float())))
+
+                v_3 = (self.h3_line.return_float() + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d3_line.return_float()
+                       * (self.betweeen.return_float() - self.d3_line.return_float())
+                       - (self.tx_h_line.return_float() * (self.betweeen.return_float() - self.d3_line.return_float())
+                          + self.rx_h_line.return_float() * self.d3_line.return_float())
+                       / self.betweeen.return_float()) * sqrt((0.002 * self.betweeen.return_float())
+                                                              / (self.wavelength * self.d3_line.return_float() * (
+                            self.betweeen.return_float() - self.d3_line.return_float())))
+
+                v_4 = (self.h4_line.return_float() + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d4_line.return_float()
+                       * (self.betweeen.return_float() - self.d4_line.return_float())
+                       - (self.tx_h_line.return_float() * (self.betweeen.return_float() - self.d4_line.return_float())
+                          + self.rx_h_line.return_float() * self.d4_line.return_float())
+                       / self.betweeen.return_float()) * sqrt((0.002 * self.betweeen.return_float())
+                                                              / (self.wavelength * self.d4_line.return_float() * (
+                            self.betweeen.return_float() - self.d4_line.return_float())))
+
+                v_max = round(max(v_1,v_2,v_3,v_4), 3)
+
+                self.vb_line.setText(str(v_max))
 
         except UnboundLocalError:
             print("Zaznacz częstotliwość")
 
         except ValueError:
-            print("Wypełnij wszystkie pola")
+            print("Nieprawidłowe wartości")
 
         except ZeroDivisionError:
             print("Błąd dzielenia przez zero - dobierz inne wartości")
