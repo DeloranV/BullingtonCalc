@@ -25,37 +25,47 @@ class Bullington():
 		self.rx_h = param_dict["rx_h"]
 		self.freq = param_dict["freq"]
 
-	def calculate_total_loss(self): #(TODO) TRY EXCEPT:
-		wavelength = self.wavelength()
+	def calculate_total_loss(self):
+		try:
+			wavelength = self.wavelength()
 
-		stim_radio_horizon = self.stim_radio_horizon()
-		srim_radio_horizon = None
+			stim_radio_horizon = self.stim_radio_horizon()
+			srim_radio_horizon = 0
 
-		bull_point = None
-		los = self.los()
+			bull_point = 0
+			los = self.los()
 
-		if stim_radio_horizon >= los:
-			srim_radio_horizon = self.nlos_srim_radio_horizon()
-			bull_point = self.nlos_bull_point(srim_radio_horizon, stim_radio_horizon)
-			v = self.nlos_v_param(wavelength, bull_point, stim_radio_horizon)
-			edge_loss = self.edge_loss(v)
+			if stim_radio_horizon >= los:
+				srim_radio_horizon = self.nlos_srim_radio_horizon()
+				bull_point = self.nlos_bull_point(srim_radio_horizon, stim_radio_horizon)
+				v = self.nlos_v_param(wavelength, bull_point, stim_radio_horizon)
+				edge_loss = self.edge_loss(v)
 
-		else:
-			v = self.los_v_param(wavelength)
-			edge_loss = self.edge_loss(v)
+			else:
+				v = self.los_v_param(wavelength)
+				edge_loss = self.edge_loss(v)
 
-		total_loss = self.total_loss(edge_loss)
+			total_loss = self.total_loss(edge_loss)
 
-		result_dict = {"wavelength": float(wavelength),
-					  "stim": float(stim_radio_horizon),
-					  "srim": float(srim_radio_horizon),
-					  "los": float(los),
-					  "bull_p": float(bull_point),
-					  "v_param": float(v),
-					  "edge_l": float(edge_loss),
-					  "total_l": float(total_loss)}
+			result_dict = {"wavelength": round(float(wavelength), 3),
+						  "stim": round(float(stim_radio_horizon), 3),
+						  "srim": round(float(srim_radio_horizon), 3),
+						  "los": round(float(los), 3),
+						  "bull_p": round(float(bull_point), 3),
+						  "v_param": round(float(v), 3),
+						  "edge_l": round(float(edge_loss), 3),
+						  "total_l": round(float(total_loss), 3)}
 
-		return result_dict
+			return result_dict
+
+		except UnboundLocalError:
+			print("Zaznacz częstotliwość")
+
+		except ValueError:
+			print("Nieprawidłowe wartości")
+
+		except ZeroDivisionError:
+			print("Błąd dzielenia przez zero - dobierz inne wartości")
 
 	def wavelength(self):
 		wavelength = self.LIGHT_SPEED / self.freq
@@ -68,12 +78,13 @@ class Bullington():
 		s_tim3 = ((self.h3 + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d3 * (self.between - self.d3) - self.tx_h) / self.d3)
 		s_tim4 = ((self.h4 + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d4 * (self.between - self.d4) - self.tx_h) / self.d4)
 
-		stim = np.maximum(s_tim1, s_tim2, s_tim3, s_tim4)
+		#stim = np.maximum(s_tim1, s_tim2, s_tim3, s_tim4) - for graphing
+		stim = max(s_tim1, s_tim2, s_tim3, s_tim4)
 
 		return stim
 
 	def los(self):
-		s_tr = self.rx_h - self.tx_h / self.between
+		s_tr = (self.rx_h - self.tx_h) / self.between
 
 		return s_tr
 
@@ -89,7 +100,8 @@ class Bullington():
 		s_rim3 = ((self.h3 + 500 * self.EFFECTIVE_EARTH_CURVATURE * rx_d3 * (self.between - rx_d3) - self.rx_h) / (self.between - rx_d3))
 		s_rim4 = ((self.h4 + 500 * self.EFFECTIVE_EARTH_CURVATURE * rx_d4 * (self.between - rx_d4) - self.rx_h) / (self.between - rx_d4))
 
-		srim = np.maximum(s_rim1, s_rim2, s_rim3, s_rim4)
+		#srim = np.maximum(s_rim1, s_rim2, s_rim3, s_rim4)
+		srim = max(s_rim1, s_rim2, s_rim3, s_rim4)
 
 		return srim
 
@@ -120,7 +132,8 @@ class Bullington():
 				 - (self.tx_h * (self.between - self.d4) + self.rx_h * self.d4) / self.between)
 				* sqrt((0.002 * self.between) / (wavelength * self.d4 * (self.between - self.d4))))
 
-		v_max = np.maximum(vb_1, vb_2, vb_3, vb_4)
+		#v_max = np.maximum(vb_1, vb_2, vb_3, vb_4)
+		v_max = max(vb_1, vb_2, vb_3, vb_4)
 
 		return v_max
 
