@@ -38,13 +38,18 @@ class RadioController:
 		if radio == 4:
 			self.radio_list[3].setChecked(True)
 
-class DragDropController():
+
+class DragDropController:
+	def __init__(self, drag_drop_bttn, line_edit_dict):
+		self.drag_drop_bttn = drag_drop_bttn
+		self.line_edit_dict = line_edit_dict
+
 	def drop_load(self):
-		print("hello")
+		loader = DataLoader(self.line_edit_dict)
 		csv_file = []
 		self.uploaded_distance = []
-		if self.fileLoaded:
-			self.dropped = self.csv_file.split("\n")
+		if self.drag_drop_bttn.fileLoaded:
+			self.dropped = self.drag_drop_bttn.csv_file.split("\n")
 
 			for row in self.dropped:
 				if "Index" not in row:
@@ -70,7 +75,7 @@ class DragDropController():
 				   "tx_h": "",
 				   "rx_h": ""}
 
-		return max_val
+		loader.load_input_values(max_val)
 
 		'''max_val = [0,0]
 			for row in self.uploaded_distance:
@@ -80,7 +85,8 @@ class DragDropController():
 	def sort_key(self, e):  # for sorting list by second col
 		return e["h"]
 
-class DataPreparator():
+
+class DataPreparator:
 	def __init__(self, line_edit_dict, radio_controller):
 		self.line_edit_dict = line_edit_dict
 		self.radio_controller = radio_controller
@@ -98,12 +104,13 @@ class DataPreparator():
 					  "h2": float(self.line_edit_dict["h2"].text()),
 					  "h3": float(self.line_edit_dict["h3"].text()),
 					  "h4": float(self.line_edit_dict["h4"].text()),
-					  "freq": float(freq),}
+					  "freq": float(freq)}
 
 		return ready_data
 
-class DataLoader():
-	def __init__(self, line_edit_dict, radio_controller):
+
+class DataLoader:
+	def __init__(self, line_edit_dict, radio_controller=None):
 		self.line_edit_dict = line_edit_dict
 		self.radio_controller = radio_controller
 
@@ -120,8 +127,8 @@ class DataLoader():
 		self.line_edit_dict["d3"].setText(str(param_dict["d3"]))
 		self.line_edit_dict["d4"].setText(str(param_dict["d4"]))
 
-		self.radio_controller.change_toggled_radio(int(param_dict["active_radio"]))
-
+		if self.radio_controller is not None:
+			self.radio_controller.change_toggled_radio(int(param_dict["active_radio"]))
 
 	def load_output_values(self, param_dict):
 		self.line_edit_dict["wavelength"].setText(str(param_dict["wavelength"]))
@@ -132,4 +139,3 @@ class DataLoader():
 		self.line_edit_dict["v_param"].setText(str(param_dict["v_param"]))
 		self.line_edit_dict["edge_l"].setText(str(param_dict["edge_l"]))
 		self.line_edit_dict["total_l"].setText(str(param_dict["total_l"]))
-

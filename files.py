@@ -1,22 +1,25 @@
 from PySide6.QtCore import Slot
 from util import DataLoader
-class FileOperations():
+
+
+class FileOperations:
 	def __init__(self, routes_list, line_dict, radio_controller):
 		self.routes_list = routes_list
 		self.line_dict = line_dict
 		self.radio_controller = radio_controller
 		self.line_edit_loader = DataLoader(line_dict, radio_controller)
+
 	@Slot()
 	def list_remove(self) -> None:
 		selected_item = self.routes_list.takeItem(self.routes_list.currentRow())
 		saved_data = ""
 
-		with open("saved.bull", 'r') as data_file:
+		with open("data/saved.bull", 'r') as data_file:
 			for line in data_file:
 				if selected_item.text() not in line:
 					saved_data = saved_data + line
 
-		with open("saved.bull", "w") as data_file:
+		with open("data/saved.bull", "w") as data_file:
 			print(saved_data, file=data_file)
 
 	@Slot()
@@ -24,7 +27,7 @@ class FileOperations():
 		name = self.line_dict["save_name"].text()
 		self.routes_list.addItem(name)
 
-		with open("saved.bull", 'a') as data_file:
+		with open("data/saved.bull", 'a') as data_file:
 			print(name,
 				  self.line_dict["between"].text(),
 				  self.line_dict["tx_h"].text(),
@@ -58,7 +61,7 @@ class FileOperations():
 	def list_load(self) -> None:
 		self.saved_data = []
 
-		with open("saved.bull", "r") as data_file:
+		with open("data/saved.bull", "r") as data_file:
 			for line in data_file:
 				if line[0] != "\n":
 					self.saved_data.append(line.split(";"))

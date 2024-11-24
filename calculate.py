@@ -1,7 +1,7 @@
 import numpy as np
-from math import sqrt, log10, e
+from math import sqrt, e
 
-class Bullington():
+class Bullington:
 
 	EFFECTIVE_EARTH_CURVATURE = 1 / 6480
 	LIGHT_SPEED = 299792458

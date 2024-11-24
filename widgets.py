@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QPushButton
-from PySide6.QtWidgets import QLineEdit
+
+
 class DragDropBttn(QPushButton):
     def __init__(self, parent=None):
         super().__init__(parent)

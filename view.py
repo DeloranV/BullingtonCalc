@@ -1,17 +1,18 @@
 from widgets import *
-from util import  *
+from util import *
 from files import *
 from calculate import *
 
-from PySide6.QtCore import QLocale, Slot, Qt
+from PySide6.QtCore import QLocale, Qt
 from PySide6.QtGui import QDoubleValidator
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QListWidget, QLineEdit, QPushButton, QLabel, \
-	QRadioButton
+from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QListWidget, QLineEdit, QPushButton, QLabel,
+                               QRadioButton)
+
 
 class MainCalc(QDialog):
 
     def __init__(self, parent=None):
-        super(MainCalc, self).__init__(parent) #Qt.WindowType.FramelessWindowHint FOR FRAMELESS WINDOWS
+        super(MainCalc, self).__init__(parent)  # Qt.WindowType.FramelessWindowHint FOR FRAMELESS WINDOWS
         self.POSITIVE_DOUBLE_VALIDATOR = QDoubleValidator(1, 1000000, 5)
         self.POSITIVE_DOUBLE_VALIDATOR.setLocale(QLocale.Language.English)
         self.layout_init()
@@ -30,7 +31,6 @@ class MainCalc(QDialog):
 
         self.setLayout(self.main_layout)
 
-
     def list_init(self) -> QVBoxLayout:
         wrapper_layout = QVBoxLayout()
         list_buttons_layout = QHBoxLayout()
@@ -38,7 +38,7 @@ class MainCalc(QDialog):
         self.routes_list = QListWidget(self)
         self.routes_list.setMaximumWidth(100)
 
-        self.file_op = FileOperations(self.routes_list, self.line_dict, self.radio_controller) #will go out of scope and not work without "self"
+        self.file_op = FileOperations(self.routes_list, self.line_dict, self.radio_controller)  # will go out of scope and not work without "self"
         self.file_op.list_load()
         self.routes_list.currentItemChanged.connect(self.file_op.item_load)
 
@@ -60,11 +60,11 @@ class MainCalc(QDialog):
         remove_button.setObjectName("remove_button")
 
         self.upload_button = DragDropBttn()
+        self.upload_controller = DragDropController(self.upload_button, self.line_dict)
         self.upload_button.setText("Upuść CSV")
         self.upload_button.setObjectName("upload_button")
         self.upload_button.setAcceptDrops(True)
-        #value = self.upload_button.clicked.connect(self.upload_button.drop_load)
-        #print(value)
+        self.upload_button.clicked.connect(self.upload_controller.drop_load)
 
         list_buttons_layout.addWidget(save_button)
         list_buttons_layout.addWidget(remove_button)
@@ -123,7 +123,6 @@ class MainCalc(QDialog):
 
         dist_title = QLabel("Odległość wzniesień od Tx [km]")
         dist_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        #(TODO) convert this d and h stuff to lists
         d1_label = QLabel("d1")
         self.d1_line = QLineEdit()
         self.d1_line.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -408,24 +407,12 @@ class MainCalc(QDialog):
         self.main_layout = QHBoxLayout(self)
         self.main_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-
         self.right_side_layout = QVBoxLayout(self)
 
-
     def results_calculate(self):
-        #if self.check_non_empty():
-        '''if self.active_radio == 1:
-            f = 174 * pow(10,6)
-        elif self.active_radio == 2:
-            f = 880 * pow(10,6)
-        elif self.active_radio == 3:
-            f = 2500 * pow(10,6)
-        elif self.active_radio == 4:
-            f = 3500 * pow(10,6)'''
-        line_edit_ldr = DataLoader(self.line_dict, self.radio_controller) #py is pass by assignement - dicts and objects are mutable so will pass by reference
+        line_edit_ldr = DataLoader(self.line_dict, self.radio_controller)  # py is pass by assignement - dicts and objects are mutable so will pass by reference
         data_prep = DataPreparator(self.line_dict, self.radio_controller)
         data = data_prep.prepare_float()
         calculation = Bullington(data)
         results = calculation.calculate_total_loss()
         line_edit_ldr.load_output_values(results)
-
