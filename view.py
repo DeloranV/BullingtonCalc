@@ -36,25 +36,26 @@ class MainCalc(QDialog):
         list_buttons_layout = QHBoxLayout()
 
         self.routes_list = QListWidget(self)
-        self.routes_list.setMaximumWidth(100)
+        self.routes_list.setMaximumWidth(150)
 
         self.file_op = FileOperations(self.routes_list, self.line_dict, self.radio_controller)  # will go out of scope and not work without "self"
         self.file_op.list_load()
         self.routes_list.currentItemChanged.connect(self.file_op.item_load)
 
         self.name_line = QLineEdit()
-        self.name_line.setMaximumWidth(100)
+        self.name_line.setMaximumWidth(150)
         self.name_line.setPlaceholderText("Wprowadź nazwę")
+        self.name_line.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.line_dict["save_name"] = self.name_line
 
         save_button = QPushButton()
-        save_button.setMaximumWidth(50)
+        save_button.setMaximumWidth(100)
         save_button.setText("Zapisz")
         save_button.clicked.connect(self.file_op.list_save)
         save_button.setObjectName("save_button")
 
         remove_button = QPushButton()
-        remove_button.setMaximumWidth(50)
+        remove_button.setMaximumWidth(100)
         remove_button.setText("Usuń")
         remove_button.clicked.connect(self.file_op.list_remove)
         remove_button.setObjectName("remove_button")
@@ -167,7 +168,7 @@ class MainCalc(QDialog):
         dist_layout.addWidget(self.d4_line)
         dist_layout.addSpacing(15)
 
-        height_title = QLabel("Wysokość wzniesień [m]")
+        height_title = QLabel("Wysokość wzniesień [m.n.p.m.]")
         height_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         h1_label = QLabel("h1")

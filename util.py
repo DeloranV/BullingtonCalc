@@ -76,8 +76,6 @@ class DragDropController:
 		max_val["h4"] = self.uploaded_distance[3]["h"]
 		max_val["d4"] = self.uploaded_distance[3]["d"]
 
-				   #"between": "",
-
 
 		loader.load_input_values(max_val)
 
