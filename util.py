@@ -61,8 +61,10 @@ class DragDropController:
 				self.uploaded_distance[-1]["d"] = float(csv_file[row][3].replace(',', '.'))
 				self.uploaded_distance[-1]["h"] = float(csv_file[row][4].replace(',', '.'))
 
-		max_val = {"tx_h": self.uploaded_distance[0]["h"],
-				   "rx_h": self.uploaded_distance[-1]["h"],
+		max_val = {"tx_h_terrain": self.uploaded_distance[0]["h"],
+				   "rx_h_terrain": self.uploaded_distance[-1]["h"],
+				   "tx_h": "",
+				   "rx_h": "",
 				   "between": round(self.uploaded_distance[-1]["d"], 1)}
 
 		self.uploaded_distance.sort(reverse=True, key=self.sort_key)
@@ -78,6 +80,8 @@ class DragDropController:
 
 
 		loader.load_input_values(max_val)
+
+		loader.load_placeholder_input_values(max_val)
 
 		'''max_val = [0,0]
 			for row in self.uploaded_distance:
@@ -95,6 +99,7 @@ class DataPreparator:
 
 	def prepare_float(self) -> dict:
 		freq = self.radio_controller.radio_value()
+
 		ready_data = {"between": float(self.line_edit_dict["between"].text()),
 					  "tx_h": float(self.line_edit_dict["tx_h"].text()),
 					  "rx_h": float(self.line_edit_dict["rx_h"].text()),
@@ -108,6 +113,16 @@ class DataPreparator:
 					  "h4": float(self.line_edit_dict["h4"].text()),
 					  "freq": float(freq)}
 
+		tx_h_terrain = self.line_edit_dict["tx_h"].placeholderText()
+		rx_h_terrain = self.line_edit_dict["rx_h"].placeholderText()
+
+		if tx_h_terrain and rx_h_terrain != "":
+			ready_data["tx_h_terrain"] = float(tx_h_terrain.replace("+", ""))
+			ready_data["rx_h_terrain"] = float(rx_h_terrain.replace("+", ""))
+		else:
+			ready_data["tx_h_terrain"] = float(0)
+			ready_data["rx_h_terrain"] = float(0)
+
 		return ready_data
 
 
@@ -116,7 +131,11 @@ class DataLoader:
 		self.line_edit_dict = line_edit_dict
 		self.radio_controller = radio_controller
 
-	def load_input_values(self, param_dict) -> None:
+	def load_placeholder_input_values(self, param_dict):
+		self.line_edit_dict["tx_h"].setPlaceholderText(str(param_dict["tx_h_terrain"]) + "+")
+		self.line_edit_dict["rx_h"].setPlaceholderText(str(param_dict["rx_h_terrain"]) + "+")
+
+	def load_input_values(self, param_dict) -> None: #use kwargs instead ?
 		self.line_edit_dict["between"].setText(str(param_dict["between"]))
 		self.line_edit_dict["tx_h"].setText(str(param_dict["tx_h"]))
 		self.line_edit_dict["rx_h"].setText(str(param_dict["rx_h"]))

@@ -21,8 +21,8 @@ class Bullington:
 
 		self.between = param_dict["between"]
 
-		self.tx_h = param_dict["tx_h"]
-		self.rx_h = param_dict["rx_h"]
+		self.tx_h = param_dict["tx_h"] + param_dict["tx_h_terrain"]
+		self.rx_h = param_dict["rx_h"] + param_dict["rx_h_terrain"]
 		self.freq = param_dict["freq"]
 
 	def calculate_total_loss(self) -> dict:

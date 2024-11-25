@@ -31,7 +31,9 @@ class FileOperations:
 			print(name,
 				  self.line_dict["between"].text(),
 				  self.line_dict["tx_h"].text(),
+				  self.line_dict["tx_h"].placeholderText(),
 				  self.line_dict["rx_h"].text(),
+				  self.line_dict["rx_h"].placeholderText(),
 				  self.line_dict["d1"].text(),
 				  self.line_dict["d2"].text(),
 				  self.line_dict["d3"].text(),
@@ -47,7 +49,9 @@ class FileOperations:
 			self.saved_data[-1].append(name)
 			self.saved_data[-1].append(self.line_dict["between"].text())
 			self.saved_data[-1].append(self.line_dict["tx_h"].text())
+			self.saved_data[-1].append(self.line_dict["tx_h"].placeholderText())
 			self.saved_data[-1].append(self.line_dict["rx_h"].text())
+			self.saved_data[-1].append(self.line_dict["rx_h"].placeholderText())
 			self.saved_data[-1].append(self.line_dict["d1"].text())
 			self.saved_data[-1].append(self.line_dict["d2"].text())
 			self.saved_data[-1].append(self.line_dict["d3"].text())
@@ -74,13 +78,16 @@ class FileOperations:
 			if route[0] == item.text():
 				self.line_edit_loader.load_input_values({"between": route[1],
 														 "tx_h": route[2],
-														 "rx_h": route[3],
-														 "d1": route[4],
-														 "d2": route[5],
-														 "d3": route[6],
-														 "d4": route[7],
-														 "h1": route[8],
-														 "h2": route[9],
-														 "h3": route[10],
-														 "h4": route[11],
-														"active_radio": route[12]})
+														 "rx_h": route[4],
+														 "d1": route[6],
+														 "d2": route[7],
+														 "d3": route[8],
+														 "d4": route[9],
+														 "h1": route[10],
+														 "h2": route[11],
+														 "h3": route[12],
+														 "h4": route[13],
+														"active_radio": route[14]})
+
+				self.line_edit_loader.load_placeholder_input_values({"tx_h_terrain": route[3],
+																	 "rx_h_terrain": route[5]})
