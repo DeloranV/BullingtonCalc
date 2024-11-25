@@ -62,7 +62,8 @@ class DragDropController:
 				self.uploaded_distance[-1]["h"] = float(csv_file[row][4].replace(',', '.'))
 
 		max_val = {"tx_h": self.uploaded_distance[0]["h"],
-				   "rx_h": self.uploaded_distance[-1]["h"]}
+				   "rx_h": self.uploaded_distance[-1]["h"],
+				   "between": round(self.uploaded_distance[-1]["d"], 1)}
 
 		self.uploaded_distance.sort(reverse=True, key=self.sort_key)
 
