@@ -40,21 +40,32 @@ class Bullington:
 				bull_point = self.nlos_bull_point(srim_radio_horizon, stim_radio_horizon)
 				v = self.nlos_v_param(wavelength, bull_point, stim_radio_horizon)
 				edge_loss = self.edge_loss(v)
+				total_loss = self.total_loss(edge_loss)
+
+				result_dict = {"wavelength": round(float(wavelength), 3),
+							   "stim": round(float(stim_radio_horizon), 3),
+							   "srim": round(float(srim_radio_horizon), 3),
+							   "los": round(float(los), 3),
+							   "bull_p": round(float(bull_point), 3),
+							   "v_param": round(float(v), 3),
+							   "edge_l": round(float(edge_loss), 3),
+							   "total_l": round(float(total_loss), 3)}
 
 			else:
 				v = self.los_v_param(wavelength)
 				edge_loss = self.edge_loss(v)
+				total_loss = self.total_loss(edge_loss)
 
-			total_loss = self.total_loss(edge_loss)
+				result_dict = {"wavelength": round(float(wavelength), 3),
+							   "stim": round(float(stim_radio_horizon), 3),
+							   "srim": "LINE OF SIGHT",
+							   "los": "LINE OF SIGHT",
+							   "bull_p": "LINE OF SIGHT",
+							   "v_param": round(float(v), 3),
+							   "edge_l": round(float(edge_loss), 3),
+							   "total_l": round(float(total_loss), 3)}
 
-			result_dict = {"wavelength": round(float(wavelength), 3),
-						  "stim": round(float(stim_radio_horizon), 3),
-						  "srim": round(float(srim_radio_horizon), 3),
-						  "los": round(float(los), 3),
-						  "bull_p": round(float(bull_point), 3),
-						  "v_param": round(float(v), 3),
-						  "edge_l": round(float(edge_loss), 3),
-						  "total_l": round(float(total_loss), 3)}
+
 
 			return result_dict
 
