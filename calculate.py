@@ -25,7 +25,7 @@ class Bullington:
 		self.rx_h = param_dict["rx_h"]
 		self.freq = param_dict["freq"]
 
-	def calculate_total_loss(self):
+	def calculate_total_loss(self) -> dict:
 		try:
 			wavelength = self.wavelength()
 
@@ -67,12 +67,12 @@ class Bullington:
 		except ZeroDivisionError:
 			print("Błąd dzielenia przez zero - dobierz inne wartości")
 
-	def wavelength(self):
+	def wavelength(self) -> float:
 		wavelength = self.LIGHT_SPEED / self.freq
 
 		return wavelength
 
-	def stim_radio_horizon(self):
+	def stim_radio_horizon(self) -> float:
 		s_tim1 = ((self.h1 + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d1 * (self.between - self.d1) - self.tx_h) / self.d1)
 		s_tim2 = ((self.h2 + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d2 * (self.between - self.d2) - self.tx_h) / self.d2)
 		s_tim3 = ((self.h3 + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d3 * (self.between - self.d3) - self.tx_h) / self.d3)
@@ -83,12 +83,12 @@ class Bullington:
 
 		return stim
 
-	def los(self):
+	def los(self) -> float:
 		s_tr = (self.rx_h - self.tx_h) / self.between
 
 		return s_tr
 
-	def nlos_srim_radio_horizon(self):
+	def nlos_srim_radio_horizon(self) -> float:
 
 		rx_d1 = self.between - self.d1
 		rx_d2 = self.between - self.d2
@@ -105,17 +105,17 @@ class Bullington:
 
 		return srim
 
-	def nlos_bull_point(self, srim, stim):
+	def nlos_bull_point(self, srim, stim) -> float:
 		db = ((self.rx_h - self.tx_h + srim * self.between) / (stim + srim))
 		# db = np.linspace(1, 79)
 		return db
 
-	def nlos_v_param(self, wavelength, db, stim):
+	def nlos_v_param(self, wavelength, db, stim) -> float:
 		vb = ((self.tx_h + stim * db - (self.tx_h * (self.between - db) + self.rx_h * db) / self.between) *
 			  np.sqrt((0.002 * self.between) / (wavelength * db * (self.between - db))))
 		return vb
 
-	def los_v_param(self, wavelength):
+	def los_v_param(self, wavelength) -> float:
 		vb_1 = ((self.h1 + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d1 * (self.between - self.d1)
 				 - (self.tx_h * (self.between - self.d1) + self.rx_h * self.d1) / self.between)
 				* sqrt((0.002 * self.between) / (wavelength * self.d1 * (self.between - self.d1))))
@@ -137,10 +137,10 @@ class Bullington:
 
 		return v_max
 
-	def edge_loss(self, vb):
+	def edge_loss(self, vb) -> float:
 		luc = 6.9 + 20 * np.log10(np.sqrt(pow(vb - 0.1, 2) + 1) + vb - 0.1)
 		return luc
 
-	def total_loss(self, luc):
+	def total_loss(self, luc) -> float:
 		lb = luc + (1 - pow(e, -luc / 6)) * (10 + 0.02 * self.between)
 		return lb

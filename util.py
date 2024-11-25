@@ -25,7 +25,7 @@ class RadioController:
 	def change_active_4(self):
 		self.active_radio = 4
 
-	def change_toggled_radio(self, radio):
+	def change_toggled_radio(self, radio) -> None:
 		if radio == 1:
 			self.radio_list[0].setChecked(True)
 
@@ -44,7 +44,7 @@ class DragDropController:
 		self.drag_drop_bttn = drag_drop_bttn
 		self.line_edit_dict = line_edit_dict
 
-	def drop_load(self):
+	def drop_load(self) -> None:
 		loader = DataLoader(self.line_edit_dict)
 		csv_file = []
 		self.uploaded_distance = []
@@ -61,19 +61,22 @@ class DragDropController:
 				self.uploaded_distance[-1]["d"] = float(csv_file[row][3].replace(',', '.'))
 				self.uploaded_distance[-1]["h"] = float(csv_file[row][4].replace(',', '.'))
 
+		max_val = {"tx_h": self.uploaded_distance[0]["h"],
+				   "rx_h": self.uploaded_distance[-1]["h"]}
+
 		self.uploaded_distance.sort(reverse=True, key=self.sort_key)
 
-		max_val = {"h1": self.uploaded_distance[0]["h"],
-				   "d1": self.uploaded_distance[0]["d"],
-				   "h2": self.uploaded_distance[1]["h"],
-				   "d2": self.uploaded_distance[1]["d"],
-				   "h3": self.uploaded_distance[2]["h"],
-				   "d3": self.uploaded_distance[2]["d"],
-				   "h4": self.uploaded_distance[3]["h"],
-				   "d4": self.uploaded_distance[3]["d"],
-				   "between": "",
-				   "tx_h": "",
-				   "rx_h": ""}
+		max_val["h1"] = self.uploaded_distance[0]["h"]
+		max_val["d1"] = self.uploaded_distance[0]["d"]
+		max_val["h2"] = self.uploaded_distance[1]["h"]
+		max_val["d2"] = self.uploaded_distance[1]["d"]
+		max_val["h3"] = self.uploaded_distance[2]["h"]
+		max_val["d3"] = self.uploaded_distance[2]["d"]
+		max_val["h4"] = self.uploaded_distance[3]["h"]
+		max_val["d4"] = self.uploaded_distance[3]["d"]
+
+				   #"between": "",
+
 
 		loader.load_input_values(max_val)
 
@@ -82,7 +85,7 @@ class DragDropController:
 				if row[1] > max_val[1]:
 					max_val = row'''
 
-	def sort_key(self, e):  # for sorting list by second col
+	def sort_key(self, e) -> dict:  # for sorting list by second col
 		return e["h"]
 
 
@@ -91,7 +94,7 @@ class DataPreparator:
 		self.line_edit_dict = line_edit_dict
 		self.radio_controller = radio_controller
 
-	def prepare_float(self):
+	def prepare_float(self) -> dict:
 		freq = self.radio_controller.radio_value()
 		ready_data = {"between": float(self.line_edit_dict["between"].text()),
 					  "tx_h": float(self.line_edit_dict["tx_h"].text()),
@@ -114,7 +117,7 @@ class DataLoader:
 		self.line_edit_dict = line_edit_dict
 		self.radio_controller = radio_controller
 
-	def load_input_values(self, param_dict):
+	def load_input_values(self, param_dict) -> None:
 		self.line_edit_dict["between"].setText(str(param_dict["between"]))
 		self.line_edit_dict["tx_h"].setText(str(param_dict["tx_h"]))
 		self.line_edit_dict["rx_h"].setText(str(param_dict["rx_h"]))
@@ -130,7 +133,7 @@ class DataLoader:
 		if self.radio_controller is not None:
 			self.radio_controller.change_toggled_radio(int(param_dict["active_radio"]))
 
-	def load_output_values(self, param_dict):
+	def load_output_values(self, param_dict) -> None:
 		self.line_edit_dict["wavelength"].setText(str(param_dict["wavelength"]))
 		self.line_edit_dict["stim"].setText(str(param_dict["stim"]))
 		self.line_edit_dict["srim"].setText(str(param_dict["srim"]))
