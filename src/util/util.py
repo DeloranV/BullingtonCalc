@@ -128,35 +128,51 @@ class DataPreparator:
 
 class DataLoader:
 	def __init__(self, line_edit_dict, radio_controller=None):
-		self.line_edit_dict = line_edit_dict
-		self.radio_controller = radio_controller
+		self._line_edit_dict = line_edit_dict
+		self._radio_controller = radio_controller
+
+	@property
+	def line_edit_dict(self):
+		return self._line_edit_dict
+
+	@line_edit_dict.setter
+	def line_edit_dict(self, line_edit_dict):
+		self._line_edit_dict = line_edit_dict
+
+	@property
+	def radio_controller(self):
+		return self._radio_controller
+
+	@radio_controller.setter
+	def radio_controller(self, radio_controller):
+		self._radio_controller = radio_controller
 
 	def load_placeholder_input_values(self, param_dict):
-		self.line_edit_dict["tx_h"].setPlaceholderText(str(param_dict["tx_h_terrain"]) + "+")
-		self.line_edit_dict["rx_h"].setPlaceholderText(str(param_dict["rx_h_terrain"]) + "+")
+		self._line_edit_dict["tx_h"].setPlaceholderText(str(param_dict["tx_h_terrain"]) + "+")
+		self._line_edit_dict["rx_h"].setPlaceholderText(str(param_dict["rx_h_terrain"]) + "+")
 
 	def load_input_values(self, param_dict) -> None: #use kwargs instead ?
-		self.line_edit_dict["between"].setText(str(param_dict["between"]))
-		self.line_edit_dict["tx_h"].setText(str(param_dict["tx_h"]))
-		self.line_edit_dict["rx_h"].setText(str(param_dict["rx_h"]))
-		self.line_edit_dict["h1"].setText(str(param_dict["h1"]))
-		self.line_edit_dict["h2"].setText(str(param_dict["h2"]))
-		self.line_edit_dict["h3"].setText(str(param_dict["h3"]))
-		self.line_edit_dict["h4"].setText(str(param_dict["h4"]))
-		self.line_edit_dict["d1"].setText(str(param_dict["d1"]))
-		self.line_edit_dict["d2"].setText(str(param_dict["d2"]))
-		self.line_edit_dict["d3"].setText(str(param_dict["d3"]))
-		self.line_edit_dict["d4"].setText(str(param_dict["d4"]))
+		self._line_edit_dict["between"].setText(str(param_dict["between"]))
+		self._line_edit_dict["tx_h"].setText(str(param_dict["tx_h"]))
+		self._line_edit_dict["rx_h"].setText(str(param_dict["rx_h"]))
+		self._line_edit_dict["h1"].setText(str(param_dict["h1"]))
+		self._line_edit_dict["h2"].setText(str(param_dict["h2"]))
+		self._line_edit_dict["h3"].setText(str(param_dict["h3"]))
+		self._line_edit_dict["h4"].setText(str(param_dict["h4"]))
+		self._line_edit_dict["d1"].setText(str(param_dict["d1"]))
+		self._line_edit_dict["d2"].setText(str(param_dict["d2"]))
+		self._line_edit_dict["d3"].setText(str(param_dict["d3"]))
+		self._line_edit_dict["d4"].setText(str(param_dict["d4"]))
 
-		if self.radio_controller is not None:
-			self.radio_controller.change_toggled_radio(int(param_dict["active_radio"]))
+		if self._radio_controller is not None:
+			self._radio_controller.change_toggled_radio(int(param_dict["active_radio"]))
 
 	def load_output_values(self, param_dict) -> None:
-		self.line_edit_dict["wavelength"].setText(str(param_dict["wavelength"]))
-		self.line_edit_dict["stim"].setText(str(param_dict["stim"]))
-		self.line_edit_dict["srim"].setText(str(param_dict["srim"]))
-		self.line_edit_dict["los"].setText(str(param_dict["los"]))
-		self.line_edit_dict["bull_p"].setText(str(param_dict["bull_p"]))
-		self.line_edit_dict["v_param"].setText(str(param_dict["v_param"]))
-		self.line_edit_dict["edge_l"].setText(str(param_dict["edge_l"]))
-		self.line_edit_dict["total_l"].setText(str(param_dict["total_l"]))
+		self._line_edit_dict["wavelength"].setText(str(param_dict["wavelength"]))
+		self._line_edit_dict["stim"].setText(str(param_dict["stim"]))
+		self._line_edit_dict["srim"].setText(str(param_dict["srim"]))
+		self._line_edit_dict["los"].setText(str(param_dict["los"]))
+		self._line_edit_dict["bull_p"].setText(str(param_dict["bull_p"]))
+		self._line_edit_dict["v_param"].setText(str(param_dict["v_param"]))
+		self._line_edit_dict["edge_l"].setText(str(param_dict["edge_l"]))
+		self._line_edit_dict["total_l"].setText(str(param_dict["total_l"]))

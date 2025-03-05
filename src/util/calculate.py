@@ -3,8 +3,8 @@ from math import sqrt, e
 
 class Bullington:
 
-	EFFECTIVE_EARTH_CURVATURE = 1 / 6480
-	LIGHT_SPEED = 299792458
+	_EFFECTIVE_EARTH_CURVATURE = 1 / 6480
+	_LIGHT_SPEED = 299792458
 
 	def __init__(self, param_dict):
 		self.d1 = param_dict["d1"]
@@ -79,15 +79,15 @@ class Bullington:
 			print("Błąd dzielenia przez zero - dobierz inne wartości")
 
 	def wavelength(self) -> float:
-		wavelength = self.LIGHT_SPEED / self.freq
+		wavelength = self._LIGHT_SPEED / self.freq
 
 		return wavelength
 
 	def stim_radio_horizon(self) -> float:
-		s_tim1 = ((self.h1 + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d1 * (self.between - self.d1) - self.tx_h) / self.d1)
-		s_tim2 = ((self.h2 + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d2 * (self.between - self.d2) - self.tx_h) / self.d2)
-		s_tim3 = ((self.h3 + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d3 * (self.between - self.d3) - self.tx_h) / self.d3)
-		s_tim4 = ((self.h4 + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d4 * (self.between - self.d4) - self.tx_h) / self.d4)
+		s_tim1 = ((self.h1 + 500 * self._EFFECTIVE_EARTH_CURVATURE * self.d1 * (self.between - self.d1) - self.tx_h) / self.d1)
+		s_tim2 = ((self.h2 + 500 * self._EFFECTIVE_EARTH_CURVATURE * self.d2 * (self.between - self.d2) - self.tx_h) / self.d2)
+		s_tim3 = ((self.h3 + 500 * self._EFFECTIVE_EARTH_CURVATURE * self.d3 * (self.between - self.d3) - self.tx_h) / self.d3)
+		s_tim4 = ((self.h4 + 500 * self._EFFECTIVE_EARTH_CURVATURE * self.d4 * (self.between - self.d4) - self.tx_h) / self.d4)
 
 		#stim = np.maximum(s_tim1, s_tim2, s_tim3, s_tim4) - for graphing
 		stim = max(s_tim1, s_tim2, s_tim3, s_tim4)
@@ -106,10 +106,10 @@ class Bullington:
 		rx_d3 = self.between - self.d3
 		rx_d4 = self.between - self.d4
 
-		s_rim1 = ((self.h1 + 500 * self.EFFECTIVE_EARTH_CURVATURE * rx_d1 * (self.between - rx_d1) - self.rx_h) / (self.between - rx_d1))
-		s_rim2 = ((self.h2 + 500 * self.EFFECTIVE_EARTH_CURVATURE * rx_d2 * (self.between - rx_d2) - self.rx_h) / (self.between - rx_d2))
-		s_rim3 = ((self.h3 + 500 * self.EFFECTIVE_EARTH_CURVATURE * rx_d3 * (self.between - rx_d3) - self.rx_h) / (self.between - rx_d3))
-		s_rim4 = ((self.h4 + 500 * self.EFFECTIVE_EARTH_CURVATURE * rx_d4 * (self.between - rx_d4) - self.rx_h) / (self.between - rx_d4))
+		s_rim1 = ((self.h1 + 500 * self._EFFECTIVE_EARTH_CURVATURE * rx_d1 * (self.between - rx_d1) - self.rx_h) / (self.between - rx_d1))
+		s_rim2 = ((self.h2 + 500 * self._EFFECTIVE_EARTH_CURVATURE * rx_d2 * (self.between - rx_d2) - self.rx_h) / (self.between - rx_d2))
+		s_rim3 = ((self.h3 + 500 * self._EFFECTIVE_EARTH_CURVATURE * rx_d3 * (self.between - rx_d3) - self.rx_h) / (self.between - rx_d3))
+		s_rim4 = ((self.h4 + 500 * self._EFFECTIVE_EARTH_CURVATURE * rx_d4 * (self.between - rx_d4) - self.rx_h) / (self.between - rx_d4))
 
 		#srim = np.maximum(s_rim1, s_rim2, s_rim3, s_rim4)
 		srim = max(s_rim1, s_rim2, s_rim3, s_rim4)
@@ -127,19 +127,19 @@ class Bullington:
 		return vb
 
 	def los_v_param(self, wavelength) -> float:
-		vb_1 = ((self.h1 + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d1 * (self.between - self.d1)
+		vb_1 = ((self.h1 + 500 * self._EFFECTIVE_EARTH_CURVATURE * self.d1 * (self.between - self.d1)
 				 - (self.tx_h * (self.between - self.d1) + self.rx_h * self.d1) / self.between)
 				* sqrt((0.002 * self.between) / (wavelength * self.d1 * (self.between - self.d1))))
 
-		vb_2 = ((self.h2 + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d2 * (self.between - self.d2)
+		vb_2 = ((self.h2 + 500 * self._EFFECTIVE_EARTH_CURVATURE * self.d2 * (self.between - self.d2)
 				 - (self.tx_h * (self.between - self.d2) + self.rx_h * self.d2) / self.between)
 				* sqrt((0.002 * self.between) / (wavelength * self.d2 * (self.between - self.d2))))
 
-		vb_3 = ((self.h3 + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d3 * (self.between - self.d3)
+		vb_3 = ((self.h3 + 500 * self._EFFECTIVE_EARTH_CURVATURE * self.d3 * (self.between - self.d3)
 				 - (self.tx_h * (self.between - self.d3) + self.rx_h * self.d3) / self.between)
 				* sqrt((0.002 * self.between) / (wavelength * self.d3 * (self.between - self.d3))))
 
-		vb_4 = ((self.h4 + 500 * self.EFFECTIVE_EARTH_CURVATURE * self.d4 * (self.between - self.d4)
+		vb_4 = ((self.h4 + 500 * self._EFFECTIVE_EARTH_CURVATURE * self.d4 * (self.between - self.d4)
 				 - (self.tx_h * (self.between - self.d4) + self.rx_h * self.d4) / self.between)
 				* sqrt((0.002 * self.between) / (wavelength * self.d4 * (self.between - self.d4))))
 

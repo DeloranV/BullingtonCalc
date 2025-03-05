@@ -1,7 +1,7 @@
-from widgets import *
-from util import *
-from files import *
-from calculate import *
+from src.util.widgets import *
+from src.util.util import *
+from src.util.files import *
+from src.util.calculate import *
 
 from PySide6.QtCore import QLocale, Qt
 from PySide6.QtGui import QDoubleValidator
