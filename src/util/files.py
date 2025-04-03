@@ -1,5 +1,6 @@
 from PySide6.QtCore import Slot
 from src.util.util import DataLoader
+from os import path
 
 
 class FileOperations:
@@ -14,12 +15,12 @@ class FileOperations:
 		selected_item = self.routes_list.takeItem(self.routes_list.currentRow())
 		saved_data = ""
 
-		with open("../../data/saved.bull", 'r') as data_file:
+		with open(path.join('data', 'saved.bull'), 'r') as data_file:
 			for line in data_file:
 				if selected_item.text() not in line:
 					saved_data = saved_data + line
 
-		with open("../../data/saved.bull", "w") as data_file:
+		with open(path.join('data', 'saved.bull'), "w") as data_file:
 			print(saved_data, file=data_file)
 
 	@Slot()
@@ -27,7 +28,7 @@ class FileOperations:
 		name = self.line_dict["save_name"].text()
 		self.routes_list.addItem(name)
 
-		with open("../../data/saved.bull", 'a') as data_file:
+		with open(path.join('data', 'saved.bull'), 'a') as data_file:
 			print(name,
 				  self.line_dict["between"].text(),
 				  self.line_dict["tx_h"].text(),
@@ -65,7 +66,7 @@ class FileOperations:
 	def list_load(self) -> None:
 		self.saved_data = []
 
-		with open("../../data/saved.bull", "r") as data_file:
+		with open(path.join('data', 'saved.bull'), "r") as data_file:
 			for line in data_file:
 				if line[0] != "\n":
 					self.saved_data.append(line.split(";"))
